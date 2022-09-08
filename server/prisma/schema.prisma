@@ -9,8 +9,35 @@ datasource db {
 }
 
 model User {
+  id        Int       @id @default(autoincrement())
+  username  String    @unique
+  email     String    @unique
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  profile   Profile?
+  country   Country[]
+}
+
+model Profile {
+  id               Int      @id @default(autoincrement())
+  countriesVisited Int
+  friends          Int
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  user             User     @relation(fields: [userId], references: [id])
+  userId           Int      @unique
+}
+
+model Country {
   id        Int      @id @default(autoincrement())
-  username  String   @unique
+  name      String   @unique
+  year      Int
+  flag      String
+  x         Int
+  y         Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    Int?
 }
