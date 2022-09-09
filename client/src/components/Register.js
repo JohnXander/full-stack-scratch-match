@@ -1,12 +1,15 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"
 
-export default function UserForm({ handleSubmit, registerResponse }) {
-    const [user, setUser] = useState({ username: "", email: "", password: "", countriesVisited: 0, friends: 0 });
+const Register = ({ handleSubmit }) => {
+    const [user, setUser] = useState({ username: "", email: "", password: "" })
+    const navigate = useNavigate()
 
     const handleSubmitDecorator = (e) => {
         e.preventDefault();
         handleSubmit(user);
-        setUser({ username: "", email: "", password: "", countriesVisited: 0, friends: 0 })
+        setUser({ username: "", email: "", password: "" })
+        navigate("/map")
     };
 
     const handleChange = (e) => {
@@ -16,16 +19,19 @@ export default function UserForm({ handleSubmit, registerResponse }) {
 
     return (
         <>
-            <h1>Register</h1>
-            <form onSubmit={handleSubmitDecorator}>
-                <input type="text" name="username" placeholder="Username" value={user.username} onChange={handleChange} />
-                <input type="email" name="email" placeholder="Email" value={user.email} onChange={handleChange} />
-                <input type="password" name="password" placeholder="Password" value={user.password} onChange={handleChange} />
-                <input type="number" name="countriesVisited" placeholder="Countries Visited" value={user.countriesVisited} onChange={handleChange} />
-                <input type="number" name="friends" placeholder="Friends" value={user.friends} onChange={handleChange} />
-                <button type="submit">Submit</button>
-            </form>
-            {registerResponse && <p>{registerResponse}</p>}
+            <h1 class="text-center">Register</h1>
+            <div class="d-flex justify-content-center">
+                <form onSubmit={handleSubmitDecorator}>
+                    <div class="form-group">
+                        <input class="form-control-lg" type="text" name="username" placeholder="Username" value={user.username} onChange={handleChange} />
+                        <input class="form-control-lg" type="email" name="email" placeholder="Email" value={user.email} onChange={handleChange} />
+                        <input class="form-control-lg" type="password" name="password" placeholder="Password" value={user.password} onChange={handleChange} />
+                    </div>
+                    <button class="btn btn-primary btn-lg" type="submit">Submit</button>
+                </form>
+            </div>
         </>
     );
 }
+
+export default Register
