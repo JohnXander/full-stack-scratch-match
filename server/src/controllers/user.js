@@ -12,7 +12,7 @@ const registerUser = async (req, res) => {
         const createdUser = await prisma.user.create({
             data: {
                 username, email, password: hashedPwd,
-                profile: { create: { countriesVisited, friends } }
+                profile: { create: { countriesVisited: +countriesVisited, friends: +friends } }
             },
             include: { profile: true }
         })
