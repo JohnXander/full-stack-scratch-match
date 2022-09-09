@@ -10,7 +10,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const userRouter = require('./routers/user');
+const countryRouter = require('./routers/country');
 
 app.use('/users', userRouter);
+app.use('/countries', countryRouter);
 
 module.exports = app

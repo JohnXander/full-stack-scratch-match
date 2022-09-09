@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -14,28 +14,48 @@ const App = () => {
   const [object, setObject] = useState("")
   const [action, setAction] = useState("")
   const [loggedIn, setLoggedIn] = useState(false)
+  const [currentUser, setCurrentUser] = useState("")
+  const [userCountries, setUserCountries] = useState([])
+
+  const API_URL = "http://localhost:4000/"
+  let userParamId = 1
+  // if (currentUser) userParamId = +currentUser.user.id
+
+  useEffect(() => {
+    if (!userCountries) {
+      fetch(`${API_URL}countries/${userParamId}`, { method: "GET" })
+        .then(resp => resp.json())
+        .then(data => setUserCountries(data))
+    }
+  }, [loggedIn])
 
   const handleRegister = async ({ username, email, password }) => {
-    await fetch("http://localhost:4000/users/register", {
+    await fetch(`${API_URL}users/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({ username, email, password, countriesVisited: 0, friends: 0 })
     })
+      .then(resp => resp.json())
+      .then(data => setCurrentUser(data))
+
     setNotification("Registration", "successful")
     setTimeout(() => { setNotification("", "") }, "5000")
     setLoggedIn(true)
   }
 
   const handleLogin = async ({ username, password }) => {
-    await fetch("http://localhost:4000/users/login", {
+    await fetch(`${API_URL}users/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({ username, password })
     })
+      .then(resp => resp.json())
+      .then(data => setCurrentUser(data))
+
     setNotification("Login", "successful")
     setTimeout(() => { setNotification("", "") }, "5000")
     setLoggedIn(true)
