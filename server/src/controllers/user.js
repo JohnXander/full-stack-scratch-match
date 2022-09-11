@@ -35,7 +35,7 @@ const loginUser = async (req, res) => {
         if (!passwordsMatch) throw 'Invalid username or password.'
 
         const token = jwt.sign({ username }, process.env.JWT_SECRET)
-        res.status(201).json({ token })
+        res.status(201).json({ foundUser })
 
     } catch (error) {
         res.status(404).json({ error })

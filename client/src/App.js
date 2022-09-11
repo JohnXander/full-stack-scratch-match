@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -8,6 +8,7 @@ import {
 
 import Hero from './components/Hero';
 import Login from './components/Login';
+import Map from './components/Map';
 import Register from './components/Register';
 
 const App = () => {
@@ -19,15 +20,13 @@ const App = () => {
 
   const API_URL = "http://localhost:4000/"
   let userParamId = 1
-  // if (currentUser) userParamId = +currentUser.user.id
+  if (currentUser) userParamId = +currentUser.id
 
-  useEffect(() => {
-    if (!userCountries) {
-      fetch(`${API_URL}countries/${userParamId}`, { method: "GET" })
-        .then(resp => resp.json())
-        .then(data => setUserCountries(data))
-    }
-  }, [loggedIn])
+  const handleMap = async () => {
+    await fetch(`${API_URL}countries/${userParamId}`, { method: "GET" })
+      .then(resp => resp.json())
+      .then(data => setUserCountries(data.countries))
+  }
 
   const handleRegister = async ({ username, email, password }) => {
     await fetch(`${API_URL}users/register`, {
@@ -38,7 +37,7 @@ const App = () => {
       body: JSON.stringify({ username, email, password, countriesVisited: 0, friends: 0 })
     })
       .then(resp => resp.json())
-      .then(data => setCurrentUser(data))
+      .then(data => setCurrentUser(data.user))
 
     setNotification("Registration", "successful")
     setTimeout(() => { setNotification("", "") }, "5000")
@@ -54,7 +53,7 @@ const App = () => {
       body: JSON.stringify({ username, password })
     })
       .then(resp => resp.json())
-      .then(data => setCurrentUser(data))
+      .then(data => setCurrentUser(data.foundUser))
 
     setNotification("Login", "successful")
     setTimeout(() => { setNotification("", "") }, "5000")
@@ -88,6 +87,7 @@ const App = () => {
             <Route path="/" element={<Hero />} />
             <Route path='/register' element={<Register handleSubmit={handleRegister} />} />
             <Route path='/login' element={<Login handleSubmit={handleLogin} />} />
+            <Route path='/map' element={<Map handleSubmit={handleMap} userCountries={userCountries} />} />
           </Routes>
         </main>
       </Router>
